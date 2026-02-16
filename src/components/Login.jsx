@@ -1,17 +1,70 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { BASE_URL } from "../utils/constant";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function AuthForm() {
+
   const [isLogin, setIsLogin] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
-  const [error, _setError] = useState("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  
+ const handleLogin = async () => {
+  try {
+    const res = await axios.post(
+      `${BASE_URL}/login`,
+      { emailId, password },
+      { withCredentials: true }
+    );
+
+    dispatch(addUser(res.data.data)); 
+    navigate("/");
+
+  } catch (err) {
+    setError(err?.response?.data || "Login failed");
+  }
+};
+
+
+
+ const handleSignUp = async () => {
+  try {
+    const res = await axios.post(
+      `${BASE_URL}/signup`,   
+      { firstName, lastName, emailId, password },
+      { withCredentials: true }
+    );
+
+    dispatch(addUser(res.data.data)); 
+    navigate("/");
+
+  } catch (err) {
+    setError(err?.response?.data || "Signup failed");
+  }
+};
+
+
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isLogin) handleLogin();
+    else handleSignUp();
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
 
+      
       <div className="absolute w-[500px] h-[500px] bg-red-600/20 blur-3xl rounded-full top-[-100px] left-[-100px]"></div>
       <div className="absolute w-[400px] h-[400px] bg-blue-600/20 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
 
@@ -36,7 +89,7 @@ function AuthForm() {
               className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/30 focus:outline-none focus:border-red-500 transition"
             />
 
-            <label className="text-sm text-gray-300">Last Name</label>
+            <label className="text-sm text-gray-300 mt-2 block">Last Name</label>
             <input
               type="text"
               placeholder="lastName"
@@ -47,7 +100,6 @@ function AuthForm() {
           </div>
         )}
 
-   
         <div className="mb-4">
           <label className="text-sm text-gray-300">Email</label>
           <input
@@ -59,7 +111,6 @@ function AuthForm() {
           />
         </div>
 
-      
         <div className="mb-5 relative">
           <label className="text-sm text-gray-300">Password</label>
           <input
@@ -77,12 +128,14 @@ function AuthForm() {
           </span>
         </div>
 
-       
         {error && (
           <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
         )}
 
-        <button className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:scale-105 transition-all duration-300 p-3 rounded-lg font-semibold shadow-lg">
+        <button
+          onClick={handleSubmit}
+          className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:scale-105 transition-all duration-300 p-3 rounded-lg font-semibold shadow-lg"
+        >
           {isLogin ? "Login" : "Create Account"}
         </button>
 
