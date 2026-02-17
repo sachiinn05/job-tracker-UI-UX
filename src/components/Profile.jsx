@@ -1,30 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "../utils/constant";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
 
-  const user = {
-    firstName: "Sachin",
-    lastName: "Singh",
-    emailId: "sachin@gmail.com"
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    try {
+      const res = await axios.get(
+        BASE_URL + "/profile/view",
+        { withCredentials: true }
+      );
+      setUser(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  // 🔥 state to toggle edit mode
-  const [isEditing, setIsEditing] = useState(false);
+  if (!user) return <h2 className="text-center mt-10">Loading profile...</h2>;
 
   return (
-    <div className="min-h-screen bg-black text-white flex justify-center items-center p-6">
+    <div className="min-h-screen bg-black text-white flex justify-center items-center">
 
-      <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-10 w-[500px]">
+      <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-3xl shadow-2xl w-[420px]">
 
-        {/* Header */}
+        {/* Avatar */}
         <div className="flex flex-col items-center">
-
-          {/* Avatar */}
-          <div className="w-24 h-24 rounded-full bg-gradient-to-r from-red-500 to-pink-500 flex items-center justify-center text-3xl font-bold">
-            {user.firstName.charAt(0)}
+          <div className="w-24 h-24 rounded-full bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center text-3xl font-bold">
+            {user.firstName?.charAt(0)}
           </div>
 
-          <h2 className="text-3xl font-bold mt-4">
+          <h2 className="text-2xl font-bold mt-4">
             {user.firstName} {user.lastName}
           </h2>
 
@@ -33,83 +46,29 @@ function Profile() {
 
         <div className="border-t border-white/20 my-6"></div>
 
-        {/* Profile Info */}
-        <div className="space-y-4">
-
-          {/* First Name */}
-          <div>
-            <label className="text-gray-400 text-sm">First Name</label>
-
-            {isEditing ? (
-              <input
-                className="w-full bg-white/10 p-3 rounded-lg mt-1 outline-none"
-                defaultValue={user.firstName}
-              />
-            ) : (
-              <div className="bg-white/10 p-3 rounded-lg mt-1">
-                {user.firstName}
-              </div>
-            )}
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <label className="text-gray-400 text-sm">Last Name</label>
-
-            {isEditing ? (
-              <input
-                className="w-full bg-white/10 p-3 rounded-lg mt-1 outline-none"
-                defaultValue={user.lastName}
-              />
-            ) : (
-              <div className="bg-white/10 p-3 rounded-lg mt-1">
-                {user.lastName}
-              </div>
-            )}
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="text-gray-400 text-sm">Email</label>
-
-            {isEditing ? (
-              <input
-                className="w-full bg-white/10 p-3 rounded-lg mt-1 outline-none"
-                defaultValue={user.emailId}
-              />
-            ) : (
-              <div className="bg-white/10 p-3 rounded-lg mt-1">
-                {user.emailId}
-              </div>
-            )}
-          </div>
-
+        {/* Info */}
+        <div className="space-y-3 text-sm">
+          <p><span className="text-gray-400">Age:</span> {user.age}</p>
+          <p><span className="text-gray-400">Gender:</span> {user.gender}</p>
+          <p><span className="text-gray-400">About:</span> {user.about}</p>
+          <p><span className="text-gray-400">Skills:</span> {user.skills?.join(", ")}</p>
         </div>
 
-        {/* Buttons */}
-        <div className="mt-8 flex gap-4">
+        {user.photo && (
+          <img
+            src={BASE_URL + user.photo}
+            alt="profile"
+            className="mt-6 rounded-xl"
+          />
+        )}
 
-          {/* Edit Button */}
-          {!isEditing && (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="flex-1 bg-gradient-to-r from-red-600 to-pink-600 p-3 rounded-lg font-semibold hover:scale-105 transition"
-            >
-              Edit Profile
-            </button>
-          )}
-
-          {/* Save Button */}
-          {isEditing && (
-            <button
-              onClick={() => setIsEditing(false)}
-              className="flex-1 bg-green-600 p-3 rounded-lg font-semibold hover:scale-105 transition"
-            >
-              Save
-            </button>
-          )}
-
-        </div>
+        {/* Button */}
+        <button
+          onClick={() => navigate("/edit-profile")}
+          className="mt-8 w-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 rounded-xl font-semibold hover:scale-105 transition"
+        >
+          Edit Profile
+        </button>
 
       </div>
     </div>
