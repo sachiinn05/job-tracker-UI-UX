@@ -1,30 +1,22 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../utils/constant";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Profile() {
 
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  // 🧠 Local state (form + profile data)
+  const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    getProfile();
-  }, []);
+  const [firstName, setFirstName] = useState("Sachin");
+  const [lastName, setLastName] = useState("Singh");
+  const [email, setEmail] = useState("sachin@gmail.com");
+  const [age, setAge] = useState(23);
+  const [gender, setGender] = useState("Male");
+  const [about, setAbout] = useState("MERN Developer");
+  const [skills, setSkills] = useState("React, Node");
 
-  const getProfile = async () => {
-    try {
-      const res = await axios.get(
-        BASE_URL + "/profile/view",
-        { withCredentials: true }
-      );
-      setUser(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+  // 🧠 toggle edit mode
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
   };
-
-  if (!user) return <h2 className="text-center mt-10">Loading profile...</h2>;
 
   return (
     <div className="min-h-screen bg-black text-white flex justify-center items-center">
@@ -34,40 +26,89 @@ function Profile() {
         {/* Avatar */}
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center text-3xl font-bold">
-            {user.firstName?.charAt(0)}
+            {firstName.charAt(0)}
           </div>
 
-          <h2 className="text-2xl font-bold mt-4">
-            {user.firstName} {user.lastName}
-          </h2>
-
-          <p className="text-gray-400">{user.emailId}</p>
+          {isEditing ? (
+            <>
+              <input
+                className="mt-4 p-2 rounded-lg bg-white/20"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <input
+                className="mt-2 p-2 rounded-lg bg-white/20"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+              <input
+                className="mt-2 p-2 rounded-lg bg-white/20"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold mt-4">
+                {firstName} {lastName}
+              </h2>
+              <p className="text-gray-400">{email}</p>
+            </>
+          )}
         </div>
 
         <div className="border-t border-white/20 my-6"></div>
 
         {/* Info */}
         <div className="space-y-3 text-sm">
-          <p><span className="text-gray-400">Age:</span> {user.age}</p>
-          <p><span className="text-gray-400">Gender:</span> {user.gender}</p>
-          <p><span className="text-gray-400">About:</span> {user.about}</p>
-          <p><span className="text-gray-400">Skills:</span> {user.skills?.join(", ")}</p>
+
+          {isEditing ? (
+            <>
+              <input
+                className="w-full p-2 rounded-lg bg-white/20"
+                placeholder="Age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+
+              <input
+                className="w-full p-2 rounded-lg bg-white/20"
+                placeholder="Gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              />
+
+              <textarea
+                className="w-full p-2 rounded-lg bg-white/20"
+                placeholder="About"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+              />
+
+              <input
+                className="w-full p-2 rounded-lg bg-white/20"
+                placeholder="Skills"
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <p><span className="text-gray-400">Age:</span> {age}</p>
+              <p><span className="text-gray-400">Gender:</span> {gender}</p>
+              <p><span className="text-gray-400">About:</span> {about}</p>
+              <p><span className="text-gray-400">Skills:</span> {skills}</p>
+            </>
+          )}
+
         </div>
 
-        {user.photo && (
-          <img
-            src={BASE_URL + user.photo}
-            alt="profile"
-            className="mt-6 rounded-xl"
-          />
-        )}
-
-        {/* Button */}
+        {/* Buttons */}
         <button
-          onClick={() => navigate("/edit-profile")}
+          onClick={handleEditToggle}
           className="mt-8 w-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 rounded-xl font-semibold hover:scale-105 transition"
         >
-          Edit Profile
+          {isEditing ? "Save Profile" : "Edit Profile"}
         </button>
 
       </div>

@@ -28,7 +28,7 @@ function AuthForm() {
     );
 
     dispatch(addUser(res.data.data)); 
-    navigate("/");
+    navigate("/profile");
 
   } catch (err) {
     setError(err?.response?.data || "Login failed");
