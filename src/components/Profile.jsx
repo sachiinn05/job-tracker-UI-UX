@@ -1,22 +1,81 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { BASE_URL } from "../utils/constant";
+import axios from "axios";
 
 function Profile() {
 
-  // 🧠 Local state (form + profile data)
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [firstName, setFirstName] = useState("Sachin");
-  const [lastName, setLastName] = useState("Singh");
-  const [email, setEmail] = useState("sachin@gmail.com");
-  const [age, setAge] = useState(23);
-  const [gender, setGender] = useState("Male");
-  const [about, setAbout] = useState("MERN Developer");
-  const [skills, setSkills] = useState("React, Node");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [about, setAbout] = useState("");
+  const [skills, setSkills] = useState("");
 
-  // 🧠 toggle edit mode
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
+  // 🔹 fetch profile
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get(
+        BASE_URL + "/profile/view",
+        { withCredentials: true }
+      );
+
+      const user = res.data;
+
+      setFirstName(user.firstName || "");
+      setLastName(user.lastName || "");
+      setEmail(user.emailId || "");
+      setAge(user.age || "");
+      setGender(user.gender || "");
+      setAbout(user.about || "");
+      setSkills(user.skills?.join(", ") || "");
+
+      setLoading(false);
+
+    } catch (err) {
+      console.error("Error fetching profile:", err);
+      setLoading(false);
+    }
   };
+
+  // 🔹 save profile API
+  const saveProfile = async () => {
+    try {
+      setLoading(true);
+
+      await axios.patch(
+        BASE_URL + "/profile/editi",
+        {
+          firstName,
+          lastName,
+          age,
+          gender,
+          about,
+          skills: skills.split(",").map(s => s.trim())
+        },
+        { withCredentials: true }
+      );
+
+      setIsEditing(false);
+      setLoading(false);
+
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      setLoading(false);
+    }
+  };
+
+  // 🔹 loader
+  if (loading) {
+    return <h2 className="text-white text-center mt-10">Loading profile...</h2>;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex justify-center items-center">
@@ -26,7 +85,7 @@ function Profile() {
         {/* Avatar */}
         <div className="flex flex-col items-center">
           <div className="w-24 h-24 rounded-full bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center text-3xl font-bold">
-            {firstName.charAt(0)}
+            {firstName?.charAt(0)}
           </div>
 
           {isEditing ? (
@@ -100,16 +159,24 @@ function Profile() {
               <p><span className="text-gray-400">Skills:</span> {skills}</p>
             </>
           )}
-
         </div>
 
-        {/* Buttons */}
-        <button
-          onClick={handleEditToggle}
-          className="mt-8 w-full bg-gradient-to-r from-pink-500 to-purple-600 py-3 rounded-xl font-semibold hover:scale-105 transition"
-        >
-          {isEditing ? "Save Profile" : "Edit Profile"}
-        </button>
+        {/* Button */}
+        {isEditing ? (
+          <button
+            onClick={saveProfile}
+            className="mt-8 w-full bg-green-500 py-3 rounded-xl font-semibold"
+          >
+            Save Profile
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="mt-8 w-full bg-purple-600 py-3 rounded-xl font-semibold"
+          >
+            Edit Profile
+          </button>
+        )}
 
       </div>
     </div>
