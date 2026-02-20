@@ -1,20 +1,20 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AuthFrom from "./components/Login";
+import AuthForm from "./components/Login";
 import Profile from "./components/Profile";
-
-
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-   
-    <BrowserRouter basename="/">
-      <Routes>
-        <Route path="/" element={<AuthFrom/>}/>
-        <Route path="/profile" element={<Profile/>} />
-       
-      </Routes>
+    <BrowserRouter>
+      <Navbar />
+
+      <div className="pt-20">
+        <Routes>
+          <Route path="/" element={<AuthForm />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </div>
     </BrowserRouter>
-  
   );
 }
 
