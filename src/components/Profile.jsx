@@ -19,12 +19,10 @@ function Profile() {
   const [about, setAbout] = useState("");
   const [skills, setSkills] = useState("");
 
-  
- 
-
   useEffect(() => {
     fetchProfile();
   }, []);
+
   const fetchProfile = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/profile/view`, {
@@ -44,13 +42,11 @@ function Profile() {
       setSkills(userData.skills?.join(", ") ?? "");
 
       setLoading(false);
-    } catch (err) {
-      console.error("Error fetching profile:", err);
+    } catch {
       setLoading(false);
     }
   };
 
-  
   const saveProfile = async () => {
     try {
       setLoading(true);
@@ -71,12 +67,10 @@ function Profile() {
       dispatch(addUser(res.data.data));
       setIsEditing(false);
       setLoading(false);
-    } catch (err) {
-      console.error("Error updating profile:", err.response?.data || err.message);
+    } catch {
       setLoading(false);
     }
   };
-
 
   const handlePhotoUpload = async (e) => {
     const formData = new FormData();
@@ -88,150 +82,136 @@ function Profile() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      await fetchProfile(); // refresh redux
-    } catch (err) {
-      console.error("Photo upload error:", err);
-    }
+      await fetchProfile();
+    } catch {}
   };
 
   if (loading || !user) {
     return (
-      <h2 className="text-white text-center mt-10">Loading profile...</h2>
+      <div
+        className="min-h-screen flex items-center justify-center text-white bg-cover bg-center relative"
+        style={{
+          backgroundImage:
+            "url('https://img.freepik.com/free-photo/careers-analysis-cooperation-data-development-concept_53876-21163.jpg')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/80"></div>
+        <span className="relative z-10">Loading...</span>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center p-6 text-white">
-      <div className="w-[480px] bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl p-10 transition-all duration-300 hover:shadow-purple-500/20">
+    <div
+      className="min-h-screen bg-cover bg-center relative text-white"
+      style={{
+        backgroundImage:
+          "url('https://img.freepik.com/free-photo/careers-analysis-cooperation-data-development-concept_53876-21163.jpg')",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
 
-        {/* ===== Profile Image Section ===== */}
-        <div className="flex flex-col items-center relative">
+      <div className="relative z-10">
 
-          <div className="relative group">
-            {user.photo ? (
-              <img
-                src={`${BASE_URL}${user.photo}`}
-                alt="profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-purple-500 shadow-lg transition duration-300 group-hover:scale-105"
-              />
-            ) : (
-              <div className="w-32 h-32 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-5xl font-bold shadow-lg">
-                {user.firstName?.charAt(0)}
+        <div className="h-72 bg-gradient-to-r from-indigo-600/30 via-purple-600/20 to-pink-600/30" />
+
+        <div className="max-w-7xl mx-auto px-6 -mt-36 pb-20">
+
+          <div className="grid lg:grid-cols-[360px_1fr] gap-12">
+
+            <div className="bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-3xl p-8">
+              <div className="flex flex-col items-center gap-6">
+
+                <div className="relative group">
+                  {user.photo ? (
+                    <img
+                      src={`${BASE_URL}${user.photo}`}
+                      className="w-44 h-44 rounded-2xl object-cover border border-white/10 shadow-2xl hover:scale-[1.03] transition"
+                    />
+                  ) : (
+                    <div className="w-44 h-44 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-6xl font-bold shadow-2xl">
+                      {user.firstName?.charAt(0)}
+                    </div>
+                  )}
+
+                  {isEditing && (
+                    <label className="absolute bottom-3 right-3 w-12 h-12 flex items-center justify-center bg-black/40 backdrop-blur border border-white/20 rounded-full cursor-pointer hover:scale-110 transition">
+                      ✎
+                      <input type="file" onChange={handlePhotoUpload} className="hidden" />
+                    </label>
+                  )}
+                </div>
+
+                {!isEditing ? (
+                  <>
+                    <h1 className="text-2xl font-semibold tracking-tight">
+                      {firstName} {lastName}
+                    </h1>
+                    <p className="text-gray-400 text-sm">{email}</p>
+
+                    <div className="flex gap-12 pt-6 border-t border-white/10 text-sm">
+                      <div className="text-center">
+                        <p className="text-white font-medium">{age || "-"}</p>
+                        <p className="text-gray-500 text-xs uppercase tracking-wide">Age</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-white font-medium capitalize">{gender || "-"}</p>
+                        <p className="text-gray-500 text-xs uppercase tracking-wide">Gender</p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="w-full space-y-4">
+                    <input className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 outline-none" value={firstName} onChange={(e)=>setFirstName(e.target.value)} />
+                    <input className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 outline-none" value={lastName} onChange={(e)=>setLastName(e.target.value)} />
+                    <input type="number" className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 outline-none" value={age} onChange={(e)=>setAge(e.target.value)} />
+                    <select className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 outline-none" value={gender} onChange={(e)=>setGender(e.target.value)}>
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="others">Others</option>
+                    </select>
+                  </div>
+                )}
+
+                <button onClick={isEditing ? saveProfile : ()=>setIsEditing(true)} className="w-full py-3 rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-purple-600 hover:scale-[1.02] transition">
+                  {isEditing ? "Save Changes" : "Edit Profile"}
+                </button>
+
               </div>
-            )}
+            </div>
 
-            {isEditing && (
-              <label className="absolute bottom-2 right-2 bg-purple-600 p-2 rounded-full cursor-pointer hover:bg-purple-700 transition">
-                ✎
-                <input
-                  type="file"
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                />
-              </label>
-            )}
-          </div>
+            <div className="space-y-10">
 
-          {!isEditing ? (
-            <>
-              <h2 className="text-3xl font-bold mt-6 tracking-wide">
-                {firstName} {lastName}
-              </h2>
-              <p className="text-gray-400 text-sm">{email}</p>
-            </>
-          ) : (
-            <>
-              <input
-                className="mt-6 w-full bg-white/10 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First Name"
-              />
-              <input
-                className="mt-3 w-full bg-white/10 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last Name"
-              />
-            </>
-          )}
-        </div>
+              <div className="bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-3xl p-8">
+                <h2 className="text-xl font-semibold mb-4">About</h2>
+                {!isEditing ? (
+                  <p className="text-gray-300">{about || "Add a professional summary about yourself."}</p>
+                ) : (
+                  <textarea value={about} onChange={(e)=>setAbout(e.target.value)} className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 min-h-[120px] max-h-[160px] overflow-y-auto resize-none outline-none"/>
+                )}
+              </div>
 
-        <div className="border-t border-white/10 my-8"></div>
-
-     
-        <div className="space-y-5 text-sm">
-
-          {isEditing ? (
-            <>
-              <input
-                type="number"
-                className="w-full bg-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500"
-                placeholder="Age"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-              />
-
-              <select
-                className="w-full bg-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="others">Others</option>
-              </select>
-
-              <textarea
-                className="w-full bg-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500"
-                placeholder="About"
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
-              />
-
-              <input
-                className="w-full bg-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500"
-                placeholder="Skills (comma separated)"
-                value={skills}
-                onChange={(e) => setSkills(e.target.value)}
-              />
-            </>
-          ) : (
-            <>
-              <p><span className="text-gray-400">Age:</span> {age}</p>
-              <p><span className="text-gray-400">Gender:</span> {gender}</p>
-              <p><span className="text-gray-400">About:</span> {about}</p>
-
-              <div>
-                <p className="text-gray-400 mb-2">Skills:</p>
-                <div className="flex flex-wrap gap-2">
-                  {skills &&
-                    skills.split(",").map((skill, i) => (
-                      <span
-                        key={i}
-                        className="bg-purple-600/80 px-3 py-1 rounded-full text-xs hover:bg-purple-500 transition"
-                      >
-                        {skill}
+              <div className="bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-3xl p-8">
+                <h2 className="text-xl font-semibold mb-6">Skills</h2>
+                {!isEditing ? (
+                  <div className="flex flex-wrap gap-3">
+                    {skills?.split(",").map((s,i)=>(
+                      <span key={i} className="px-4 py-2 bg-white/[0.06] border border-white/10 rounded-lg text-sm">
+                        {s}
                       </span>
                     ))}
-                </div>
+                  </div>
+                ) : (
+                  <input value={skills} onChange={(e)=>setSkills(e.target.value)} className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 outline-none"/>
+                )}
               </div>
-            </>
-          )}
+
+            </div>
+
+          </div>
         </div>
 
-        
-        <button
-          onClick={isEditing ? saveProfile : () => setIsEditing(true)}
-          className={`mt-10 w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
-            isEditing
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90"
-          }`}
-        >
-          {isEditing ? "Save Profile" : "Edit Profile"}
-        </button>
       </div>
     </div>
   );

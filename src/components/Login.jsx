@@ -6,7 +6,6 @@ import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 
 function AuthForm() {
-
   const [isLogin, setIsLogin] = useState(true);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -18,43 +17,34 @@ function AuthForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  
- const handleLogin = async () => {
-  try {
-    const res = await axios.post(
-      `${BASE_URL}/login`,
-      { emailId, password },
-      { withCredentials: true }
-    );
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/login`,
+        { emailId, password },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res.data.data));
+      navigate("/profile");
+    } catch (err) {
+      setError(err?.response?.data || "Login failed");
+    }
+  };
 
-    dispatch(addUser(res.data.data)); 
-    navigate("/profile");
+  const handleSignUp = async () => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/signup`,
+        { firstName, lastName, emailId, password },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res.data.data));
+      navigate("/profile");
+    } catch (err) {
+      setError(err?.response?.data || "Signup failed");
+    }
+  };
 
-  } catch (err) {
-    setError(err?.response?.data || "Login failed");
-  }
-};
-
-
-
- const handleSignUp = async () => {
-  try {
-    const res = await axios.post(
-      `${BASE_URL}/signup`,   
-      { firstName, lastName, emailId, password },
-      { withCredentials: true }
-    );
-
-    dispatch(addUser(res.data.data)); 
-    navigate("/profile");
-
-  } catch (err) {
-    setError(err?.response?.data || "Signup failed");
-  }
-};
-
-
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isLogin) handleLogin();
@@ -62,92 +52,115 @@ function AuthForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center relative px-6"
+      style={{
+        backgroundImage:
+          "url('https://img.freepik.com/free-photo/careers-analysis-cooperation-data-development-concept_53876-21163.jpg')",
+      }}
+    >
 
-      
-      <div className="absolute w-[500px] h-[500px] bg-red-600/20 blur-3xl rounded-full top-[-100px] left-[-100px]"></div>
-      <div className="absolute w-[400px] h-[400px] bg-blue-600/20 blur-3xl rounded-full bottom-[-100px] right-[-100px]"></div>
+      {/* dark overlay */}
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
 
-      <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-3xl shadow-2xl w-[400px] text-white">
+      {/* auth card */}
+      <div className="relative z-10 w-full max-w-md bg-white/[0.04] backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-3xl p-10 text-white">
 
-        <h2 className="text-4xl font-bold text-center mb-2">
-          {isLogin ? "Welcome Back" : "Join Now"}
-        </h2>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            {isLogin ? "Welcome back" : "Create your account"}
+          </h2>
+          <p className="text-gray-400 text-sm mt-2">
+            {isLogin
+              ? "Sign in to continue"
+              : "Start tracking your job applications"}
+          </p>
+        </div>
 
-        <p className="text-center text-gray-400 mb-6 text-sm">
-          {isLogin ? "Login to continue watching" : "Create account & start exploring"}
-        </p>
+        <form onSubmit={handleSubmit} className="space-y-5">
 
-        {!isLogin && (
-          <div className="mb-4">
-            <label className="text-sm text-gray-300">First Name</label>
+          {!isLogin && (
+            <>
+              <div>
+                <label className="text-xs text-gray-400 uppercase tracking-wide">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="mt-2 w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 outline-none transition"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-gray-400 uppercase tracking-wide">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="mt-2 w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 outline-none transition"
+                />
+              </div>
+            </>
+          )}
+
+          <div>
+            <label className="text-xs text-gray-400 uppercase tracking-wide">
+              Email
+            </label>
             <input
-              type="text"
-              placeholder="firstName"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/30 focus:outline-none focus:border-red-500 transition"
-            />
-
-            <label className="text-sm text-gray-300 mt-2 block">Last Name</label>
-            <input
-              type="text"
-              placeholder="lastName"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/30 focus:outline-none focus:border-red-500 transition"
+              type="email"
+              value={emailId}
+              onChange={(e) => setEmailId(e.target.value)}
+              className="mt-2 w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 outline-none transition"
             />
           </div>
-        )}
 
-        <div className="mb-4">
-          <label className="text-sm text-gray-300">Email</label>
-          <input
-            type="email"
-            placeholder="example@gmail.com"
-            value={emailId}
-            onChange={(e) => setEmailId(e.target.value)}
-            className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/30 focus:outline-none focus:border-red-500 transition"
-          />
-        </div>
+          <div className="relative">
+            <label className="text-xs text-gray-400 uppercase tracking-wide">
+              Password
+            </label>
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-2 w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 pr-12 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 outline-none transition"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-[38px] text-gray-400 hover:text-white transition"
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
 
-        <div className="mb-5 relative">
-          <label className="text-sm text-gray-300">Password</label>
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/30 focus:outline-none focus:border-red-500 transition"
-          />
-          <span
-            className="absolute right-3 top-10 cursor-pointer text-gray-300"
-            onClick={() => setShowPassword(!showPassword)}
+          {error && (
+            <p className="text-red-400 text-sm text-center">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl font-medium bg-gradient-to-r from-indigo-500 to-purple-600 hover:scale-[1.02] hover:shadow-lg transition-all duration-200"
           >
-            {showPassword ? "🙈" : "👁️"}
-          </span>
-        </div>
+            {isLogin ? "Sign In" : "Create Account"}
+          </button>
 
-        {error && (
-          <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
-        )}
+        </form>
 
-        <button
-          onClick={handleSubmit}
-          className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:scale-105 transition-all duration-300 p-3 rounded-lg font-semibold shadow-lg"
-        >
-          {isLogin ? "Login" : "Create Account"}
-        </button>
-
-        <p className="text-center mt-6 text-sm text-gray-400">
+        <div className="text-center mt-8 text-sm text-gray-400">
           {isLogin ? "New here?" : "Already have an account?"}
-          <span
+          <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-red-500 ml-2 cursor-pointer font-semibold hover:underline"
+            className="ml-2 text-indigo-400 hover:text-indigo-300 transition"
           >
-            {isLogin ? "Create account" : "Login"}
-          </span>
-        </p>
+            {isLogin ? "Create account" : "Sign in"}
+          </button>
+        </div>
+
       </div>
     </div>
   );
