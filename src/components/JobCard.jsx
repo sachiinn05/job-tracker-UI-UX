@@ -10,7 +10,7 @@ function JobCard({job}) {
       </div>
 
       <p className="mt-2 text-gray-300">Company: {job.companyName}</p>
-      <p className="text-gray-300">Platform: {job.platfrom}</p>
+      <p className="text-gray-300">Platform: {job.platform}</p>
 
       <div className="flex gap-3 mt-4">
         <button className="bg-blue-600 px-4 py-1 rounded-lg hover:bg-blue-700">
