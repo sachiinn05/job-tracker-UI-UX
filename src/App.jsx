@@ -9,13 +9,14 @@ function App() {
     <BrowserRouter>
       <Navbar />
 
-      <div className="pt-20">
+      {/* Global spacing for fixed navbar */}
+      <main className="pt-20 min-h-screen bg-black text-white">
         <Routes>
           <Route path="/" element={<AuthForm />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/applications" element={<ApplicationsPage/>}/>
+          <Route path="/applications" element={<ApplicationsPage />} />
         </Routes>
-      </div>
+      </main>
     </BrowserRouter>
   );
 }

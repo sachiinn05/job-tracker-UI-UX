@@ -1,71 +1,103 @@
 import { useEffect, useState } from "react";
-import JobCard from "../components/JobCard";
-import AddJobForm from "../components/AddJobForm";
 import axios from "axios";
 import { BASE_URL } from "../utils/constant";
+import AnalyticsCards from "../components/AnalyticsCards";
+import AddJobForm from "../components/AddJobForm";
+import JobCard from "../components/JobCard";
+import JobDetailsPanel from "../components/JobDetailsPanel";
+import bg from "../assets/bg.jpg";
 
 function ApplicationsPage() {
-  const [jobs, setJob] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [jobs, setJobs] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [statusFilter]);
 
   const fetchJobs = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/job`, {
-        withCredentials: true,
-      });
-      setJob(res.data);
-    } catch (err) {
-      console.log(err);
-      setError("Failed to fetch jobs");
-    } finally {
-      setLoading(false);
-    }
+    const res = await axios.get(`${BASE_URL}/job?status=${statusFilter}`, {
+      withCredentials: true,
+    });
+    setJobs(res.data);
   };
-
- 
-  const handleJobAdded = (newJob) => {
-    setJob((prev) => [newJob, ...prev]);
-  };
-
-  if (loading) {
-    return (
-      <div className="pt-24 text-center text-white">
-        Loading jobs...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="pt-24 text-center text-red-500">
-        {error}
-      </div>
-    );
-  }
 
   return (
-    <div className="pt-24 px-6 max-w-6xl mx-auto text-white">
-      <h1 className="text-3xl font-bold mb-6">
-        My Applications
-      </h1>
+    <div
+      className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${bg})` }}
+    >
+      <div className="bg-black/70 min-h-screen px-8 py-8">
 
+        <div className="max-w-7xl mx-auto">
 
-      <AddJobForm onJobAdded={handleJobAdded} />
+          <h1 className="text-4xl font-bold mb-2">Applications</h1>
+          <p className="text-gray-400 mb-6">Track everything here</p>
 
-      {jobs.length === 0 ? (
-        <p>No job Application yet.</p>
-      ) : (
-        <div className="space-y-4">
-          {jobs.map((job) => (
-            <JobCard key={job._id} job={job} />
-          ))}
+          <AnalyticsCards />
+
+        
+          <div className="flex gap-4 mt-6 mb-6">
+            <select
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-gray-800 p-2 rounded"
+            >
+              <option value="">All Status</option>
+              <option>Applied</option>
+              <option>OA</option>
+              <option>Interview</option>
+              <option>Offer</option>
+              <option>Rejected</option>
+            </select>
+
+            <input
+              placeholder="Search company..."
+              onChange={(e) => setSearch(e.target.value)}
+              className="bg-gray-800 p-2 rounded w-60"
+            />
+          </div>
+
+        
+          <div className="grid lg:grid-cols-3 gap-8">
+
+      
+            <div className="lg:col-span-2 space-y-6">
+
+              <AddJobForm
+                onJobAdded={(job) => setJobs((prev) => [job, ...prev])}
+              />
+
+              {jobs
+                .filter((j) =>
+                  j.companyName.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((job) => (
+                  <JobCard
+                    key={job._id}
+                    job={job}
+                    onSelect={() => setSelectedJob(job)}
+                    onDelete={(id) =>
+                      setJobs((prev) => prev.filter((j) => j._id !== id))
+                    }
+                    onStatusUpdate={(updated) =>
+                      setJobs((prev) =>
+                        prev.map((j) =>
+                          j._id === updated._id ? updated : j
+                        )
+                      )
+                    }
+                  />
+                ))}
+            </div>
+
+        
+            {selectedJob && <JobDetailsPanel job={selectedJob} />}
+
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
