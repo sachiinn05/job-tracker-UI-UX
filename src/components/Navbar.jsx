@@ -104,6 +104,13 @@ function Navbar() {
                   >
                     📁 Applications
                   </Link>
+                   <Link
+                    to="/applications"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition"
+                  >
+                    📁 Preparation
+                  </Link>
 
                   <Link
                     to="/profile"

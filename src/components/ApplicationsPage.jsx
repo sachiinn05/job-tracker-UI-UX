@@ -7,9 +7,14 @@ import JobCard from "../components/JobCard";
 import JobDetailsPanel from "../components/JobDetailsPanel";
 import bg from "../assets/bg.jpg";
 
+import { useDispatch, useSelector } from "react-redux";
+import { addJob, setJob, deleteJob, updateJob, setSelectedJob } from "../utils/jobSlice";
+
 function ApplicationsPage() {
-  const [jobs, setJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null);
+
+  const dispatch = useDispatch();
+  const { jobs, selectedJob } = useSelector((store) => store.job);
+
   const [statusFilter, setStatusFilter] = useState("");
   const [search, setSearch] = useState("");
 
@@ -21,7 +26,8 @@ function ApplicationsPage() {
     const res = await axios.get(`${BASE_URL}/job?status=${statusFilter}`, {
       withCredentials: true,
     });
-    setJobs(res.data);
+
+    dispatch(setJob(res.data));
   };
 
   return (
@@ -30,7 +36,6 @@ function ApplicationsPage() {
       style={{ backgroundImage: `url(${bg})` }}
     >
       <div className="bg-black/70 min-h-screen px-8 py-8">
-
         <div className="max-w-7xl mx-auto">
 
           <h1 className="text-4xl font-bold mb-2">Applications</h1>
@@ -38,7 +43,6 @@ function ApplicationsPage() {
 
           <AnalyticsCards />
 
-        
           <div className="flex gap-4 mt-6 mb-6">
             <select
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -59,14 +63,13 @@ function ApplicationsPage() {
             />
           </div>
 
-        
           <div className="grid lg:grid-cols-3 gap-8">
 
-      
             <div className="lg:col-span-2 space-y-6">
 
+           
               <AddJobForm
-                onJobAdded={(job) => setJobs((prev) => [job, ...prev])}
+                onJobAdded={(job) => dispatch(addJob(job))}
               />
 
               {jobs
@@ -77,22 +80,20 @@ function ApplicationsPage() {
                   <JobCard
                     key={job._id}
                     job={job}
-                    onSelect={() => setSelectedJob(job)}
+
+                    onSelect={() => dispatch(setSelectedJob(job))}
+
                     onDelete={(id) =>
-                      setJobs((prev) => prev.filter((j) => j._id !== id))
+                      dispatch(deleteJob(id))
                     }
+
                     onStatusUpdate={(updated) =>
-                      setJobs((prev) =>
-                        prev.map((j) =>
-                          j._id === updated._id ? updated : j
-                        )
-                      )
+                      dispatch(updateJob(updated))
                     }
                   />
                 ))}
             </div>
 
-        
             {selectedJob && <JobDetailsPanel job={selectedJob} />}
 
           </div>
