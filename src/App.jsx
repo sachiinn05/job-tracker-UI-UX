@@ -3,6 +3,7 @@ import AuthForm from "./components/Login";
 import Profile from "./components/Profile";
 import Navbar from "./components/Navbar";
 import ApplicationsPage from "./components/ApplicationsPage";
+import AddPreparation from "./components/Preparation";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<AuthForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/applications" element={<ApplicationsPage />} />
+          <Route path="/preparation" element={<AddPreparation/>}/>
         </Routes>
       </main>
     </BrowserRouter>
