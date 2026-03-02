@@ -1,6 +1,44 @@
-function AddPreparationForm() {
+import { useState } from "react";
+
+function AddPreparationForm({ onAdd }) {
+
+  const [formData, setFormData] = useState({
+    topic: "",
+    level: "Beginner",
+    confidence: 5,
+    notes: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newTopic = {
+      ...formData,
+      id: Date.now(),
+    };
+
+    onAdd(newTopic);
+
+    setFormData({
+      topic: "",
+      level: "Beginner",
+      confidence: 5,
+      notes: "",
+    });
+  };
+
   return (
-    <form className="bg-gray-900/70 backdrop-blur-lg p-6 rounded-2xl border border-gray-700 shadow-lg">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-gray-900/70 p-6 rounded-2xl border border-gray-700"
+    >
 
       <h2 className="text-2xl font-semibold mb-6">
         Add New Topic
@@ -10,11 +48,20 @@ function AddPreparationForm() {
 
         <input
           type="text"
-          placeholder="Topic (e.g. Dynamic Programming)"
-          className="p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+          name="topic"
+          value={formData.topic}
+          onChange={handleChange}
+          placeholder="Topic"
+          className="p-3 bg-gray-800 rounded-lg"
+          required
         />
 
-        <select className="p-3 rounded-lg bg-gray-800 border border-gray-700 focus:ring-2 focus:ring-purple-600">
+        <select
+          name="level"
+          value={formData.level}
+          onChange={handleChange}
+          className="p-3 bg-gray-800 rounded-lg"
+        >
           <option>Beginner</option>
           <option>Intermediate</option>
           <option>Advanced</option>
@@ -23,27 +70,27 @@ function AddPreparationForm() {
       </div>
 
       <div className="mt-4">
-        <label className="text-gray-400 text-sm">
-          Confidence Level (1–10)
-        </label>
-
+        <label>Confidence: {formData.confidence}</label>
         <input
           type="range"
           min="1"
           max="10"
-          className="w-full mt-2"
+          name="confidence"
+          value={formData.confidence}
+          onChange={handleChange}
+          className="w-full"
         />
       </div>
 
       <textarea
-        placeholder="Notes..."
-        className="p-3 rounded-lg bg-gray-800 border border-gray-700 w-full mt-4"
+        name="notes"
+        value={formData.notes}
+        onChange={handleChange}
+        placeholder="Notes"
+        className="p-3 bg-gray-800 rounded-lg w-full mt-4"
       />
 
-      <button
-        type="button"
-        className="mt-6 w-full bg-purple-600 hover:bg-purple-700 transition p-3 rounded-xl font-semibold"
-      >
+      <button className="mt-6 w-full bg-purple-600 p-3 rounded-xl">
         + Add Topic
       </button>
 

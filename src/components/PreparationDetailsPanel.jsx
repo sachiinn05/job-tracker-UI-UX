@@ -1,17 +1,18 @@
-function PreparationDetailsPanel() {
+function PreparationDetailsPanel({ topic }) {
+
   return (
-    <div className="bg-gray-900/80 p-6 rounded-2xl border border-white/10 sticky top-24 h-fit">
+    <div className="bg-gray-900/80 p-6 rounded-2xl border border-white/10 sticky top-24">
 
       <h2 className="text-2xl font-semibold">
-        Dynamic Programming
+        {topic.topic}
       </h2>
 
       <p className="text-gray-400 mt-2">
-        Level: Intermediate
+        Level: {topic.level}
       </p>
 
       <p className="mt-4">
-        Confidence: 7 / 10
+        Confidence: {topic.confidence}/10
       </p>
 
       <div className="mt-6">
@@ -20,7 +21,7 @@ function PreparationDetailsPanel() {
         </h3>
 
         <p className="text-gray-300">
-          Need more practice on DP on Trees and Memoization.
+          {topic.notes}
         </p>
       </div>
 
