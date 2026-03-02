@@ -3,21 +3,19 @@ import AuthForm from "./components/Login";
 import Profile from "./components/Profile";
 import Navbar from "./components/Navbar";
 import ApplicationsPage from "./components/ApplicationsPage";
-import AddPreparation from "./components/AddPreparationForm";
-import AddPreparationForm from "./components/AddPreparationForm";
+import PreparationPage from "./components/PreparationPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
 
-      {/* Global spacing for fixed navbar */}
       <main className="pt-20 min-h-screen bg-black text-white">
         <Routes>
           <Route path="/" element={<AuthForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/applications" element={<ApplicationsPage />} />
-          <Route path="/preparation" element={<AddPreparationForm/>}/>
+          <Route path="/preparation" element={<PreparationPage/>}/>
         </Routes>
       </main>
     </BrowserRouter>
