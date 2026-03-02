@@ -1,8 +1,11 @@
 function PreparationCard({ topic, onSelect, onDelete, onUpdate }) {
 
+
+  if (!topic) return null;
+
   return (
     <div
-      className="bg-gray-900/80 p-6 rounded-2xl border border-white/10 cursor-pointer"
+      className="bg-gray-900/80 p-6 rounded-2xl border border-white/10 hover:shadow-xl transition cursor-pointer"
       onClick={onSelect}
     >
 
@@ -12,6 +15,7 @@ function PreparationCard({ topic, onSelect, onDelete, onUpdate }) {
           <h2 className="text-xl font-semibold">
             {topic.topic}
           </h2>
+
           <p className="text-gray-400 text-sm">
             {topic.level}
           </p>
@@ -28,9 +32,9 @@ function PreparationCard({ topic, onSelect, onDelete, onUpdate }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onUpdate();
+            onUpdate(topic._id);
           }}
-          className="px-4 py-2 bg-green-600 rounded-lg"
+          className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition"
         >
           Update
         </button>
@@ -38,9 +42,9 @@ function PreparationCard({ topic, onSelect, onDelete, onUpdate }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onDelete();
+            onDelete(topic._id);
           }}
-          className="px-4 py-2 bg-red-600 rounded-lg"
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition"
         >
           Delete
         </button>

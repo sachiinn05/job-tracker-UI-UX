@@ -1,5 +1,15 @@
 function PreparationDetailsPanel({ topic }) {
 
+  if (!topic) {
+    return (
+      <div className="bg-gray-900/80 p-6 rounded-2xl border border-white/10 sticky top-24">
+        <p className="text-gray-400">
+          Select a topic to view full details
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-900/80 p-6 rounded-2xl border border-white/10 sticky top-24">
 
@@ -21,7 +31,7 @@ function PreparationDetailsPanel({ topic }) {
         </h3>
 
         <p className="text-gray-300">
-          {topic.notes}
+          {topic.notes || "No notes added"}
         </p>
       </div>
 
