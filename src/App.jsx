@@ -4,6 +4,7 @@ import Profile from "./components/Profile";
 import Navbar from "./components/Navbar";
 import ApplicationsPage from "./components/ApplicationsPage";
 import PreparationPage from "./components/PreparationPage";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/applications" element={<ApplicationsPage />} />
           <Route path="/preparation" element={<PreparationPage/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </main>
     </BrowserRouter>
