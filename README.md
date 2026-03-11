@@ -70,38 +70,7 @@ Frontend for the **Job Tracker Application** that helps users manage job applica
 - Axios
 - Redux Toolkit
 
-## 📂 Project Structure
 
-```
-src
-│
-├── assets
-│   └── bg.jpg
-│
-├── components
-│   ├── AddJobForm.jsx
-│   ├── AddPreparationForm.jsx
-│   ├── AnalyticsCards.jsx
-│   ├── ApplicationsPage.jsx
-│   ├── Dashboard.jsx
-│   ├── JobCard.jsx
-│   ├── JobDetailsPanel.jsx
-│   ├── Login.jsx
-│   ├── Navbar.jsx
-│   ├── PreparationCard.jsx
-│   ├── PreparationDetailsPanel.jsx
-│   ├── PreparationPage.jsx
-│   └── Profile.jsx
-│
-├── utils
-│   ├── appStore.js
-│   ├── constant.js
-│   ├── jobSlice.js
-│   └── userSlice.js
-│
-├── App.jsx
-├── main.jsx
-└── index.css
 ```
 
 ## ⚙️ Features
