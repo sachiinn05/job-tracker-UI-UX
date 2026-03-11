@@ -27,7 +27,7 @@ function Dashboard() {
 
   if (!stats) {
     return (
-      <div className="pt-24 text-white text-center">
+      <div className="pt-24 text-white text-center text-lg">
         Loading Dashboard...
       </div>
     );
@@ -35,70 +35,94 @@ function Dashboard() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center"
+      className="min-h-screen bg-cover bg-center relative"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="bg-black/70 min-h-screen pt-24 px-6 max-w-7xl mx-auto text-white">
+      
+      {/* Dark overlay to hide background text */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/90"></div>
 
-        <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+      {/* Content */}
+      <div className="relative min-h-screen pt-24 px-6">
 
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-12">
+        <div className="max-w-7xl mx-auto text-white">
 
-          <div className="bg-gray-900/80 p-6 rounded-xl text-center border border-white/10">
-            <p className="text-gray-400 text-sm">Total</p>
-            <h2 className="text-2xl font-bold">{stats.total}</h2>
+          <h1 className="text-4xl font-bold mb-10 tracking-wide">
+            Dashboard
+          </h1>
+
+          {/* Job Tracker Section */}
+          
+           <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">
+              Job Tracker
+            </h2>
           </div>
 
-          <div className="bg-blue-500/10 p-6 rounded-xl text-center border border-blue-500/20">
-            <p className="text-gray-400 text-sm">Applied</p>
-            <h2 className="text-2xl font-bold">{stats.applied}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-6 mb-12">
+
+            <StatCard title="Total" value={stats.total} />
+            <StatCard title="Applied" value={stats.applied} />
+            <StatCard title="OA" value={stats.oa} />
+            <StatCard title="Interview" value={stats.interview} />
+            <StatCard title="Offer" value={stats.offer} />
+            <StatCard title="Rejected" value={stats.rejected} />
+
           </div>
 
-          <div className="bg-yellow-500/10 p-6 rounded-xl text-center border border-yellow-500/20">
-            <p className="text-gray-400 text-sm">OA</p>
-            <h2 className="text-2xl font-bold">{stats.oa}</h2>
+          {/* Preparation Tracker */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">
+              Preparation Tracker
+            </h2>
           </div>
 
-          <div className="bg-purple-500/10 p-6 rounded-xl text-center border border-purple-500/20">
-            <p className="text-gray-400 text-sm">Interview</p>
-            <h2 className="text-2xl font-bold">{stats.interview}</h2>
-          </div>
-
-          <div className="bg-green-500/10 p-6 rounded-xl text-center border border-green-500/20">
-            <p className="text-gray-400 text-sm">Offer</p>
-            <h2 className="text-2xl font-bold">{stats.offer}</h2>
-          </div>
-
-          <div className="bg-red-500/10 p-6 rounded-xl text-center border border-red-500/20">
-            <p className="text-gray-400 text-sm">Rejected</p>
-            <h2 className="text-2xl font-bold">{stats.rejected}</h2>
-          </div>
+          {preparation.length === 0 ? (
+            <div className="bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-xl text-center text-gray-400">
+              No preparation topics yet
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8">
+              {preparation.map((topic) => (
+                <PreparationCard
+                  key={topic._id}
+                  topic={topic}
+                  showActions={false}
+                />
+              ))}
+            </div>
+          )}
 
         </div>
-
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold">Preparation Tracker</h2>
-        </div>
-
-        {preparation.length === 0 ? (
-          <div className="bg-gray-900/80 border border-white/10 p-8 rounded-xl text-center text-gray-400">
-            No preparation topics yet
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-3 gap-6">
-            {preparation.map((topic) => (
-              <PreparationCard
-                key={topic._id}
-                topic={topic}
-                showActions={false}
-              />
-            ))}
-          </div>
-        )}
-
       </div>
     </div>
   );
 }
 
 export default Dashboard;
+
+
+function StatCard({ title, value }) {
+  return (
+    <div
+      className="
+      p-6 rounded-xl
+      bg-white/5
+      backdrop-blur-md
+      border border-white/10
+      shadow-lg
+      hover:border-indigo-400
+      hover:scale-[1.03]
+      transition-all duration-300
+      "
+    >
+      <p className="text-sm text-gray-400">
+        {title}
+      </p>
+
+      <h2 className="text-3xl font-bold mt-1">
+        {value}
+      </h2>
+    </div>
+  );
+}

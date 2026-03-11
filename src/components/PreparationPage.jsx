@@ -7,11 +7,9 @@ import PreparationDetailsPanel from "../components/PreparationDetailsPanel";
 import bg from "../assets/bg.jpg";
 
 function PreparationPage() {
-
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
 
- 
   useEffect(() => {
     fetchTopics();
   }, []);
@@ -23,22 +21,25 @@ function PreparationPage() {
     setTopics(res.data);
   };
 
- 
   const handleDelete = async (id) => {
     await axios.delete(`${BASE_URL}/preparation/${id}`, {
       withCredentials: true,
     });
 
-    setTopics((prev) => prev.filter((t) => t._id !== id));
+    setTopics((prev) =>
+      prev.filter((t) => t._id !== id)
+    );
 
     if (selectedTopic?._id === id) {
       setSelectedTopic(null);
     }
   };
 
- 
   const handleUpdate = async (id) => {
-    const updatedConfidence = prompt("Enter new confidence (1-10)");
+    const updatedConfidence = prompt(
+      "Enter new confidence (1-10)"
+    );
+
     if (!updatedConfidence) return;
 
     const res = await axios.patch(
@@ -63,7 +64,9 @@ function PreparationPage() {
   return (
     <div
       className="min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${bg})` }}
+      style={{
+        backgroundImage: `url(${bg})`,
+      }}
     >
       <div className="bg-black/70 min-h-screen px-8 py-8">
 
@@ -79,12 +82,14 @@ function PreparationPage() {
 
           <div className="grid lg:grid-cols-3 gap-8">
 
-            {/* LEFT */}
             <div className="lg:col-span-2 space-y-6">
 
               <AddPreparationForm
                 onAdd={(topic) =>
-                  setTopics((prev) => [topic, ...prev])
+                  setTopics((prev) => [
+                    topic,
+                    ...prev,
+                  ])
                 }
               />
 
@@ -97,17 +102,24 @@ function PreparationPage() {
                   <PreparationCard
                     key={topic._id}
                     topic={topic}
-                    onSelect={() => setSelectedTopic(topic)}
-                    onDelete={() => handleDelete(topic._id)}
-                    onUpdate={() => handleUpdate(topic._id)}
+                    onSelect={() =>
+                      setSelectedTopic(topic)
+                    }
+                    onDelete={() =>
+                      handleDelete(topic._id)
+                    }
+                    onUpdate={() =>
+                      handleUpdate(topic._id)
+                    }
                   />
                 ))
               )}
 
             </div>
 
-          
-            <PreparationDetailsPanel topic={selectedTopic} />
+            <PreparationDetailsPanel
+              topic={selectedTopic}
+            />
 
           </div>
 
