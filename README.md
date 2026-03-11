@@ -1,16 +1,211 @@
-# React + Vite
+# Job Tracker UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for the **Job Tracker Application** that helps users manage job applications, track preparation progress, and monitor interview stages.
 
-Currently, two official plugins are available:
+## 🚀 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React.js
+- Vite
+- Tailwind CSS
+- Axios
+- Redux Toolkit
 
-## React Compiler
+## 📂 Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+src
+│
+├── assets
+│   └── bg.jpg
+│
+├── components
+│   ├── AddJobForm.jsx
+│   ├── AddPreparationForm.jsx
+│   ├── AnalyticsCards.jsx
+│   ├── ApplicationsPage.jsx
+│   ├── Dashboard.jsx
+│   ├── JobCard.jsx
+│   ├── JobDetailsPanel.jsx
+│   ├── Login.jsx
+│   ├── Navbar.jsx
+│   ├── PreparationCard.jsx
+│   ├── PreparationDetailsPanel.jsx
+│   ├── PreparationPage.jsx
+│   └── Profile.jsx
+│
+├── utils
+│   ├── appStore.js
+│   ├── constant.js
+│   ├── jobSlice.js
+│   └── userSlice.js
+│
+├── App.jsx
+├── main.jsx
+└── index.css
+```
 
-## Expanding the ESLint configuration
+## ⚙️ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Track job applications
+- Manage preparation topics
+- Dashboard analytics
+- Job status tracking
+- Clean modern UI
+- Responsive design
+
+## 📦 Installation
+
+Clone the repository
+
+```
+git clone # Job Tracker UI
+
+Frontend for the **Job Tracker Application** that helps users manage job applications, track preparation progress, and monitor interview stages.
+
+## 🚀 Tech Stack
+
+- React.js
+- Vite
+- Tailwind CSS
+- Axios
+- Redux Toolkit
+
+## 📂 Project Structure
+
+```
+src
+│
+├── assets
+│   └── bg.jpg
+│
+├── components
+│   ├── AddJobForm.jsx
+│   ├── AddPreparationForm.jsx
+│   ├── AnalyticsCards.jsx
+│   ├── ApplicationsPage.jsx
+│   ├── Dashboard.jsx
+│   ├── JobCard.jsx
+│   ├── JobDetailsPanel.jsx
+│   ├── Login.jsx
+│   ├── Navbar.jsx
+│   ├── PreparationCard.jsx
+│   ├── PreparationDetailsPanel.jsx
+│   ├── PreparationPage.jsx
+│   └── Profile.jsx
+│
+├── utils
+│   ├── appStore.js
+│   ├── constant.js
+│   ├── jobSlice.js
+│   └── userSlice.js
+│
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+## ⚙️ Features
+
+- Track job applications
+- Manage preparation topics
+- Dashboard analytics
+- Job status tracking
+- Clean modern UI
+- Responsive design
+
+## 📦 Installation
+
+Clone the repository
+
+```
+git clone https://github.com/sachiinn05/job-tracker-UI-UX.git
+```
+
+Go to project directory
+
+```
+cd job-tracker-UI
+```
+
+Install dependencies
+
+```
+npm install
+```
+
+Run development server
+
+```
+npm run dev
+```
+
+Application will run on
+
+```
+http://localhost:5173
+```
+
+## 🔗 Backend API
+
+Make sure backend server is running.
+
+Update API base URL in:
+
+```
+src/utils/constant.js
+```
+
+Example:
+
+```javascript
+export const BASE_URL = "http://localhost:5000";
+```
+
+## 👨‍💻 Author
+
+Sachin Singh
+```
+
+Go to project directory
+
+```
+cd job-tracker-UI
+```
+
+Install dependencies
+
+```
+npm install
+```
+
+Run development server
+
+```
+npm run dev
+```
+
+Application will run on
+
+```
+http://localhost:5173
+```
+
+## 🔗 Backend API
+
+Make sure backend server is running.
+
+Update API base URL in:
+
+```
+src/utils/constant.js
+```
+
+Example:
+
+```javascript
+export const BASE_URL = "http://localhost:5000";
+```
+
+## 👨‍💻 Author
+
+Sachin Singh
